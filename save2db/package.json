@@ -2,10 +2,10 @@
   "name": "save2db",
   "version": "1.0.0",
   "description": "Task Manager with Node.js and MySQL",
-  "main": "server.js",
+  "main": "src/js/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node src/js/server.js",
+    "dev": "nodemon src/js/server.js"
   },
   "keywords": ["nodejs", "mysql", "express", "crud"],
   "author": "",
