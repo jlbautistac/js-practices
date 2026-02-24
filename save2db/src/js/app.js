@@ -1,3 +1,6 @@
+// API Base URL
+const API_URL = 'http://localhost:3000/api/tasks';
+
 // Global State
 let todoList = [];
 
@@ -7,20 +10,46 @@ const taskInput = document.querySelector('#task-input');
 const priorityInput = document.querySelector('#priority-input');
 const taskListContainer = document.querySelector('#task-list');
 
+// --- INITIALIZE: Load tasks from database ---
+const loadTasks = async () => {
+    try {
+        const response = await fetch(API_URL);
+        todoList = await response.json();
+        renderTasks();
+    } catch (error) {
+        console.error('Error loading tasks:', error);
+        alert('Failed to load tasks from database');
+    }
+};
+
 // --- 1. CREATE ---
-taskForm.addEventListener('submit', (e) => {
+taskForm.addEventListener('submit', async (e) => {
     e.preventDefault(); // Prevents page reload
     
     const newTask = {
-        id: Date.now(),
         title: taskInput.value,
-        priority: priorityInput.value,
-        isCompleted: false
+        priority: priorityInput.value
     };
 
-    todoList.push(newTask);
-    taskForm.reset(); // Clear fields
-    renderTasks();
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newTask)
+        });
+
+        if (response.ok) {
+            taskForm.reset(); // Clear fields
+            await loadTasks(); // Reload tasks from database
+        } else {
+            throw new Error('Failed to create task');
+        }
+    } catch (error) {
+        console.error('Error creating task:', error);
+        alert('Failed to add task to database');
+    }
 });
 
 // --- 2. READ (Displaying data) ---
@@ -58,19 +87,45 @@ const renderTasks = () => {
 };
 
 // --- 3. UPDATE (Toggle Completion) ---
-window.toggleComplete = (id) => {
-    todoList = todoList.map(task => {
-        if (task.id === id) {
-            return { ...task, isCompleted: !task.isCompleted };
+window.toggleComplete = async (id) => {
+    try {
+        const task = todoList.find(t => t.id === id);
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ isCompleted: !task.isCompleted })
+        });
+
+        if (response.ok) {
+            await loadTasks(); // Reload tasks from database
+        } else {
+            throw new Error('Failed to update task');
         }
-        return task;
-    });
-    renderTasks();
+    } catch (error) {
+        console.error('Error updating task:', error);
+        alert('Failed to update task');
+    }
 };
 
 // --- 4. DELETE ---
-window.deleteTask = (id) => {
-    // Keep only tasks that DON'T match the ID provided
-    todoList = todoList.filter(task => task.id !== id);
-    renderTasks();
+window.deleteTask = async (id) => {
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            await loadTasks(); // Reload tasks from database
+        } else {
+            throw new Error('Failed to delete task');
+        }
+    } catch (error) {
+        console.error('Error deleting task:', error);
+        alert('Failed to delete task');
+    }
 };
+
+// Load tasks when page loads
+loadTasks();
