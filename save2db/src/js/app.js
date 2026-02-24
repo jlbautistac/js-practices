@@ -57,8 +57,7 @@ const renderTasks = () => {
     taskListContainer.innerHTML = ''; // Clear current UI
 
     todoList.forEach(task => {
-        const taskDiv = document.createElement('div');
-        taskDiv.className = 'row g-2 align-items-center';
+        const taskRow = document.createElement('tr');
 
         let tagPriority = '';
         if (task.priority === 'Low') {
@@ -68,21 +67,31 @@ const renderTasks = () => {
         } else if (task.priority === 'High') {
             tagPriority = 'text-bg-danger';
         }
-        
-        taskDiv.innerHTML = `
-            <div class='col-3'>
-                <span class="${task.isCompleted ? 'completed' : ''} form-text">
-                    <strong>${task.title}</strong> <span class="badge ${tagPriority} ms-2">${task.priority}</span>
+
+        taskRow.innerHTML = `
+            <td>${task.id}</td>
+            <td>
+                <span class="${task.isCompleted ? 'completed' : ''}">
+                    ${task.title}
                 </span>
-            </div>
-            <div class='col'>
-                <button class="btn btn-success btn-sm" onclick="toggleComplete(${task.id})">
-                    ${task.isCompleted ? 'Undo' : 'Done'}
-                </button>
+            </td>
+            <td><span class="badge ${tagPriority}">${task.priority}</span></td>
+            <td>
+                <div class="form-check form-switch">
+                    <input 
+                        class="form-check-input" 
+                        type="checkbox" 
+                        role="switch" 
+                        ${task.isCompleted ? 'checked' : ''}
+                        onchange="toggleComplete(${task.id})"
+                    >
+                </div>
+            </td>
+            <td>
                 <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">Delete</button>
-            </div>
+            </td>
         `;
-        taskListContainer.appendChild(taskDiv);
+        taskListContainer.appendChild(taskRow);
     });
 };
 
