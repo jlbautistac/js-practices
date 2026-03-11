@@ -1,7 +1,15 @@
 const express = require('express');
 const db = require('./db');
+const cors = require('cors');
 
 const app = express();
+
+// Middlewares
+app.use(cors({
+    origin: 'http://localhost:8080',
+    credentials: true
+}));
+
 app.use(express.json());
 
 // ------- Example Route -------
