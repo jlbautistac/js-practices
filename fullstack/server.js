@@ -1,6 +1,6 @@
 const express = require('express');
 const db = require('./db');
-const cors = require('cors');
+const cors = require('cors'); // CORS = Cross-Origin Resource Sharing
 
 const app = express();
 

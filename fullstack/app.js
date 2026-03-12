@@ -1,6 +1,5 @@
 const API_URL = 'http://localhost:3000/api/tasks/';
-
-// CORS = Cross-Origin Resource Sharing
+// const API_URL = `${window.location.protocol}//${window.location.hostname}:3000/api/tasks/`;
 
 let toDoList = [];
 
@@ -10,13 +9,13 @@ async function fetchTasks() {
         const response = await fetch(API_URL);
         const data = await response.json();
         toDoList = data;
-        console.log('Fetched tasks:', toDoList);
         renderTasks();
     } catch (error) {
         console.error('Error fetching tasks:', error);
     }
 }
 
+// Render tasks in the table
 const renderTasks = () => {
     const tasksList = document.getElementById('tasks_list');
     tasksList.innerHTML = '';
