@@ -9,6 +9,24 @@ const taskForm = document.querySelector('#task-form');
 const taskInput = document.querySelector('#task-input');
 const priorityInput = document.querySelector('#priority-input');
 const taskListContainer = document.querySelector('#task-list');
+const taskToastElement = document.querySelector('#task-toast');
+const taskToastMessage = document.querySelector('#task-toast-message');
+
+let taskToast = null;
+
+const showToast = (message, variant = 'success') => {
+    if (!taskToastElement || !taskToastMessage || typeof bootstrap === 'undefined') return;
+
+    taskToastElement.classList.remove('text-bg-success', 'text-bg-danger', 'text-bg-primary');
+    taskToastElement.classList.add(`text-bg-${variant}`);
+    taskToastMessage.textContent = message;
+
+    if (!taskToast) {
+        taskToast = new bootstrap.Toast(taskToastElement, { delay: 2200 });
+    }
+
+    taskToast.show();
+};
 
 // --- INITIALIZE: Load tasks from database ---
 const loadTasks = async () => {
@@ -43,6 +61,7 @@ taskForm.addEventListener('submit', async (e) => {
         if (response.ok) {
             taskForm.reset(); // Clear fields
             await loadTasks(); // Reload tasks from database
+            showToast('Task added successfully');
         } else {
             throw new Error('Failed to create task');
         }
@@ -127,6 +146,7 @@ window.deleteTask = async (id) => {
 
         if (response.ok) {
             await loadTasks(); // Reload tasks from database
+            showToast('Task deleted successfully', 'danger');
         } else {
             throw new Error('Failed to delete task');
         }
