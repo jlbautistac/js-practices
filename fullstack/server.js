@@ -33,7 +33,16 @@ app.get('/api/tasks/', async (req, res) => {
 app.get('/api/tasks/:id', (req, res) => {});
 
 // POST create a new task
-app.post('/api/tasks/', (req, res) => {});
+app.post('/api/tasks/', async (req, res) => {
+  const query = "INSERT INTO tasks(title, priority, isCompleted) VALUES(?, ?, ?)";
+  const { title, priority } = req.body;
+  try {
+    const [result] = await db.query(query, [title, priority, false]);
+    res.status(201).json({ id: result.insertId, title, priority, isCompleted: false });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // PUT update a specific task
 app.put('/api/tasks/:id', (req, res) => {});
