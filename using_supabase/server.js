@@ -1,0 +1,55 @@
+const express = require('express');
+const db = require('./db');
+const cors = require('cors'); // CORS = Cross-Origin Resource Sharing
+
+const app = express();
+
+// Middlewares
+app.use(cors({
+    origin: 'http://localhost:8080',
+    credentials: true
+}));
+
+app.use(express.json());
+
+// ------- Example Route -------
+app.get('/', (req, res) => {
+  res.send('Hello, world!');
+});
+
+// ------- Routes -------
+
+// GET all tasks
+app.get('/api/tasks/', async (req, res) => {
+  const { data: tasks, error } = await db.from('tasks').select('*');
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(tasks);
+});
+
+// GET an specific task
+app.get('/api/tasks/:id', (req, res) => {});
+
+// POST create a new task
+app.post('/api/tasks/', async (req, res) => {
+  const { title, priority } = req.body;
+  const { data, error } = await db
+    .from('tasks')
+    .insert({ title, priority, iscompleted: false })
+    .select('id')
+    .single();
+  if (error) return res.status(500).json({ error: error.message });
+  res.status(201).json({ id: data.id, title, priority, isCompleted: false });
+});
+
+// PUT update a specific task
+app.put('/api/tasks/:id', (req, res) => {});
+
+// DELETE a specific task
+app.delete('/api/tasks/:id', (req, res) => {});
+
+
+// ------- Execute server -------
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
