@@ -8,23 +8,27 @@
     <link rel="stylesheet" href="./src/css/styles.css">
 </head>
 <body>
-    <div class="container py-5">
-        <h2>Task Manager</h2>
-        
-        <form id="task-form" class="mb-4" action="" method="post">
-            <div class="mb-3">
-                <input class="form-control" type="text" id="task-input" placeholder="What needs to be done?" required>
-            </div>
-            <div class="mb-3">
-                <select id="priority-input" class="form-select">
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Add Task</button>
-        </form>
+    <div class="container p-5 my-4 bg-light border rounded">
+        <div>
+            <h2>Task Manager</h2>
+            
+            <form id="task-form" action="" method="post">
+                <div class="mb-3">
+                    <input class="form-control" type="text" id="task-input" placeholder="What needs to be done?" required>
+                </div>
+                <div class="mb-3">
+                    <select id="priority-input" class="form-select">
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Task</button>
+            </form>
+        </div>
+    </div>
 
+    <div class="container">
         <h3>Tasks:</h3>
 
         <div class="table-responsive">
