@@ -30,7 +30,15 @@ app.get('/api/tasks/', async (req, res) => {
 });
 
 // GET an specific task
-app.get('/api/tasks/:id', (req, res) => {});
+app.get('/api/tasks/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [task] = await db.query("SELECT * FROM tasks WHERE id = ?", [id]);
+    res.json(task[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // POST create a new task
 app.post('/api/tasks/', async (req, res) => {
