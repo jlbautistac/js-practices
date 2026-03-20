@@ -45,10 +45,30 @@ app.post('/api/tasks/', async (req, res) => {
 });
 
 // PUT update a specific task
-app.put('/api/tasks/:id', (req, res) => {});
+app.put('/api/tasks/:id', async (req, res) => {
+  const { id } = req.params;
+  const { title, priority, isCompleted } = req.body;
+  try{
+    const query = "UPDATE tasks SET title = ?, priority = ?, isCompleted = ? WHERE id = ?";
+    const [result] = await db.query(query,[title, priority, isCompleted, id]);
+    res.json({ id, title, priority, isCompleted });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+
+;})
 
 // DELETE a specific task
-app.delete('/api/tasks/:id', (req, res) => {});
+app.delete('/api/tasks/:id', async (req, res) => {
+  const { id } = req.params;
+  try{
+    const query = "DELETE FROM tasks WHERE id = ?";
+    const [result] = await db.query(query, [id]);
+    res.json({ message: `Task with id ${id} deleted` });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 
 // ------- Execute server -------
