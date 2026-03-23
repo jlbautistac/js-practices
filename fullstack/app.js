@@ -31,6 +31,14 @@ const renderTasks = () => {
     });
 }
 
+// Send new task info for saving it
+const taskForm = document.getElementById('task-form');
+taskForm.addEventListener('submit', async (event) =>{
+    event.preventDefault();
+    const title = document.getElementById('task-title').value;
+    const priority = document.getElementById('task-priority').value;
+});
+
 
 // Call to fetch function
 fetchTasks();
