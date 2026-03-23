@@ -17,7 +17,7 @@ let taskToast = null;
 const showToast = (message, variant = 'success') => {
     if (!taskToastElement || !taskToastMessage || typeof bootstrap === 'undefined') return;
 
-    taskToastElement.classList.remove('text-bg-success', 'text-bg-danger', 'text-bg-primary');
+    taskToastElement.classList.remove('text-bg-success', 'text-bg-danger', 'text-bg-primary', 'text-bg-warning');
     taskToastElement.classList.add(`text-bg-${variant}`);
     taskToastMessage.textContent = message;
 
@@ -36,7 +36,7 @@ const loadTasks = async () => {
         renderTasks();
     } catch (error) {
         console.error('Error loading tasks:', error);
-        alert('Failed to load tasks from database');
+        showToast('Failed to load tasks from database', 'danger');
     }
 };
 
@@ -61,13 +61,13 @@ taskForm.addEventListener('submit', async (e) => {
         if (response.ok) {
             taskForm.reset(); // Clear fields
             await loadTasks(); // Reload tasks from database
-            showToast('Task added successfully');
+            showToast('Task added successfully', 'success');
         } else {
             throw new Error('Failed to create task');
         }
     } catch (error) {
         console.error('Error creating task:', error);
-        alert('Failed to add task to database');
+        showToast('Failed to add task to database', 'danger');
     }
 });
 
@@ -128,12 +128,13 @@ window.toggleComplete = async (id) => {
 
         if (response.ok) {
             await loadTasks(); // Reload tasks from database
+            showToast('Task updated successfully', 'primary');
         } else {
             throw new Error('Failed to update task');
         }
     } catch (error) {
         console.error('Error updating task:', error);
-        alert('Failed to update task');
+        showToast('Failed to update task', 'danger');
     }
 };
 
@@ -152,7 +153,7 @@ window.deleteTask = async (id) => {
         }
     } catch (error) {
         console.error('Error deleting task:', error);
-        alert('Failed to delete task');
+        showToast('Failed to delete task', 'danger');
     }
 };
 
