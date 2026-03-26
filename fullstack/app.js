@@ -26,6 +26,10 @@ const renderTasks = () => {
             <td>${task.title}</td>
             <td>${task.priority}</td>
             <td>${task.isCompleted}</td>
+            <td>
+                <button class="btn btn-sm btn-primary">Edit</button>
+                <button class="btn btn-sm btn-danger" onclick="deleteTask(${task.id})">Delete</button>
+            </td>
         `;
         tasksList.appendChild(row);
     });
@@ -62,6 +66,19 @@ taskForm.addEventListener('submit', async (event) =>{
     }
 });
 
+window.deleteTask = async (id) => {
+    try {
+        const response = await fetch(`${API_URL}${id}`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            fetchTasks();
+            alert('Task deleted successfully!');
+        }
+    } catch (error) {
+        console.error('Error deleting task:', error.message);
+    }
+};
 
 // Call to fetch function
 fetchTasks();
