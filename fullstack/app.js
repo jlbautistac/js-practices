@@ -37,6 +37,29 @@ taskForm.addEventListener('submit', async (event) =>{
     event.preventDefault();
     const title = document.getElementById('task-title').value;
     const priority = document.getElementById('task-priority').value;
+
+    const newTask = {
+        title: title,
+        priority: priority
+    };
+
+    try {
+        const response = await fetch(API_URL,{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newTask)
+        });
+
+        if (response.ok) {
+            fetchTasks();
+            alert('Task added successfully!');
+            taskForm.reset();
+        }
+    } catch (error) {
+        console.error('Error adding task:', error.message);
+    }
 });
 
 
