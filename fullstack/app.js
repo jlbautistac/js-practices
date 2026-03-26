@@ -27,8 +27,8 @@ const renderTasks = () => {
             <td>${task.priority}</td>
             <td>${task.isCompleted}</td>
             <td>
-                <button class="btn btn-sm btn-primary">Edit</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteTask(${task.id})">Delete</button>
+                <button class="btn btn-sm btn-primary"><i class="bi bi-pencil-fill"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="deleteTask(${task.id})"><i class="bi bi-trash-fill"></i></button>
             </td>
         `;
         tasksList.appendChild(row);
