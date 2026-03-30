@@ -66,10 +66,31 @@ npm install
 
 ```env
 DB_HOST=localhost
+DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=tu_password
 DB_NAME=task_manager
 ```
+
+### Configuracion Railway (MySQL)
+
+Puedes usar cualquiera de estos formatos:
+
+```env
+DATABASE_URL=mysql://usuario:password@host:puerto/database
+```
+
+o separado por campos:
+
+```env
+DB_HOST=host
+DB_PORT=puerto
+DB_USER=usuario
+DB_PASSWORD=password
+DB_NAME=database
+```
+
+Nota: si usas URL completa de Railway, ponla en DATABASE_URL (o en DB_HOST con formato mysql://...) y el backend la detecta automaticamente.
 
 ## Base de datos
 
