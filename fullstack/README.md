@@ -1,6 +1,29 @@
 # Task Manager Fullstack (Node.js + Express + MySQL)
 
-Aplicacion CRUD de tareas con frontend en HTML/Bootstrap y backend REST en Express.
+Aplicacion CRUD de tareas con frontend y backend separados por capas.
+
+## Estructura
+
+```text
+fullstack/
+  backend/
+    app.js
+    server.js
+    config/
+      db.js
+    controllers/
+      tasksController.js
+    middlewares/
+      taskValidation.js
+    routes/
+      taskRoutes.js
+  frontend/
+    app.js
+    index.html
+  .env
+  package.json
+  README.md
+```
 
 ## Stack
 
@@ -80,18 +103,18 @@ INSERT INTO tasks (title, priority, isCompleted) VALUES
 1. Iniciar backend (puerto 3000):
 
 ```bash
-node server.js
+npm run start:api
 ```
 
 2. Servir frontend en puerto 8080 (recomendado por configuracion CORS):
 
 ```bash
-npx http-server . -p 8080
+npm run start:client
 ```
 
 Luego abre:
 
-- Frontend: http://localhost:8080/index.html
+- Frontend: http://localhost:8080
 - API health check: http://localhost:3000/
 
 ## Validaciones
@@ -137,5 +160,6 @@ Luego abre:
 
 ## Notas
 
-- El frontend usa API_URL fija a http://localhost:3000/api/tasks/ en app.js.
-- Si cambias host/puertos, ajusta CORS en server.js y API_URL en app.js.
+- El backend queda aislado en la carpeta backend y el frontend en frontend.
+- La URL del frontend calcula el host actual y usa el puerto 3000 para la API.
+- Si cambias puertos, ajusta CORS en backend/app.js y la constante API_URL en frontend/app.js.

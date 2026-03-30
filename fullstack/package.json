@@ -2,8 +2,11 @@
   "name": "fullstack",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "backend/server.js",
   "scripts": {
+    "start": "node backend/server.js",
+    "start:api": "node backend/server.js",
+    "start:client": "npx http-server frontend -p 8080 -c-1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
