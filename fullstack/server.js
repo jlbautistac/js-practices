@@ -17,6 +17,40 @@ app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
 
+// ------- Validation Middlewares -------
+
+const VALID_PRIORITIES = ['low', 'medium', 'high'];
+
+const validateId = (req, res, next) => {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id <= 0) {
+        return res.status(400).json({ error: 'El parámetro "id" debe ser un número entero positivo.' });
+    }
+    next();
+};
+
+const validateTaskBody = (req, res, next) => {
+    const { title, priority } = req.body;
+
+    if (!title || typeof title !== 'string' || title.trim() === '') {
+        return res.status(400).json({ error: 'El campo "title" es requerido y no puede estar vacío.' });
+    }
+
+    if (!priority || !VALID_PRIORITIES.includes(priority)) {
+        return res.status(400).json({ error: `El campo "priority" debe ser uno de: ${VALID_PRIORITIES.join(', ')}.` });
+    }
+
+    next();
+};
+
+const validateIsCompleted = (req, res, next) => {
+    const { isCompleted } = req.body;
+    if (typeof isCompleted !== 'boolean') {
+        return res.status(400).json({ error: 'El campo "isCompleted" debe ser un booleano.' });
+    }
+    next();
+};
+
 // ------- Routes -------
 
 // GET all tasks
@@ -30,7 +64,7 @@ app.get('/api/tasks/', async (req, res) => {
 });
 
 // GET an specific task
-app.get('/api/tasks/:id', async (req, res) => {
+app.get('/api/tasks/:id', validateId, async (req, res) => {
   const { id } = req.params;
   try {
     const [task] = await db.query("SELECT * FROM tasks WHERE id = ?", [id]);
@@ -41,7 +75,7 @@ app.get('/api/tasks/:id', async (req, res) => {
 });
 
 // POST create a new task
-app.post('/api/tasks/', async (req, res) => {
+app.post('/api/tasks/', validateTaskBody, async (req, res) => {
   const query = "INSERT INTO tasks(title, priority, isCompleted) VALUES(?, ?, ?)";
   const { title, priority } = req.body;
   try {
@@ -53,7 +87,7 @@ app.post('/api/tasks/', async (req, res) => {
 });
 
 // PUT update a specific task
-app.put('/api/tasks/:id', async (req, res) => {
+app.put('/api/tasks/:id', validateId, validateTaskBody, validateIsCompleted, async (req, res) => {
   const { id } = req.params;
   const { title, priority, isCompleted } = req.body;
   try{
@@ -67,7 +101,7 @@ app.put('/api/tasks/:id', async (req, res) => {
 ;})
 
 // DELETE a specific task
-app.delete('/api/tasks/:id', async (req, res) => {
+app.delete('/api/tasks/:id', validateId, async (req, res) => {
   const { id } = req.params;
   try{
     const query = "DELETE FROM tasks WHERE id = ?";
