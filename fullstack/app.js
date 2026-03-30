@@ -4,6 +4,14 @@ const API_URL = 'http://localhost:3000/api/tasks/';
 let toDoList = [];
 let editTaskModal;
 
+const showToast = (message, type = 'success') => {
+    const toastEl = document.getElementById('appToast');
+    const toastMsg = document.getElementById('appToastMessage');
+    toastEl.className = `toast align-items-center text-bg-${type} border-0`;
+    toastMsg.textContent = message;
+    bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 3500 }).show();
+};
+
 // Fetch tasks from the API
 async function fetchTasks() {
     try {
@@ -55,12 +63,17 @@ window.openEditTaskModal = (id) => {
 const taskForm = document.getElementById('task-form');
 taskForm.addEventListener('submit', async (event) =>{
     event.preventDefault();
-    const title = document.getElementById('task-title').value;
+    const title = document.getElementById('task-title').value.trim();
     const priority = document.getElementById('task-priority').value;
 
+    if (!title) {
+        showToast('El campo "Task" no puede estar vacío.', 'warning');
+        return;
+    }
+
     const newTask = {
-        title: title,
-        priority: priority
+        title,
+        priority
     };
 
     try {
@@ -74,11 +87,15 @@ taskForm.addEventListener('submit', async (event) =>{
 
         if (response.ok) {
             fetchTasks();
-            alert('Task added successfully!');
+            showToast('Task added successfully!');
             taskForm.reset();
+        } else {
+            const data = await response.json();
+            showToast(data.error || 'Error adding task.', 'danger');
         }
     } catch (error) {
         console.error('Error adding task:', error.message);
+        showToast('Could not connect to the server.', 'danger');
     }
 });
 
@@ -89,10 +106,14 @@ window.deleteTask = async (id) => {
         });
         if (response.ok) {
             fetchTasks();
-            alert('Task deleted successfully!');
+            showToast('Task deleted successfully!');
+        } else {
+            const data = await response.json();
+            showToast(data.error || 'Error deleting task.', 'danger');
         }
     } catch (error) {
         console.error('Error deleting task:', error.message);
+        showToast('Could not connect to the server.', 'danger');
     }
 };
 
@@ -123,10 +144,14 @@ editTaskForm.addEventListener('submit', async (event) => {
         if (response.ok) {
             await fetchTasks();
             editTaskModal.hide();
-            alert('Task updated successfully!');
+            showToast('Task updated successfully!');
+        } else {
+            const data = await response.json();
+            showToast(data.error || 'Error updating task.', 'danger');
         }
     } catch (error) {
         console.error('Error updating task:', error.message);
+        showToast('Could not connect to the server.', 'danger');
     }
 });
 

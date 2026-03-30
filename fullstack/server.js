@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 
 // ------- Validation Middlewares -------
 
-const VALID_PRIORITIES = ['low', 'medium', 'high'];
+const VALID_PRIORITIES = ['Low', 'Medium', 'High'];
 
 const validateId = (req, res, next) => {
     const id = Number(req.params.id);
